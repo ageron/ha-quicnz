@@ -70,6 +70,11 @@
       "is_connected": {
         "name": "Connected"
       }
+    },
+    "image": {
+      "weathermap": {
+        "name": "Network Weather Map"
+      }
     }
   }
 }

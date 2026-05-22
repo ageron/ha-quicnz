@@ -19,6 +19,33 @@ from .const import CONF_SERVICE_ID, DEFAULT_SCAN_INTERVAL, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+WEATHERMAP_SCAN_INTERVAL = 360  # 6 minutes – matches the server-side cache TTL
+
+
+class QuicNZWeathermapCoordinator(DataUpdateCoordinator[bytes]):
+    """Fetch the Quic network weather map on a fixed schedule."""
+
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
+        super().__init__(
+            hass,
+            _LOGGER,
+            config_entry=entry,
+            name=f"{DOMAIN}_weathermap",
+            update_interval=timedelta(seconds=WEATHERMAP_SCAN_INTERVAL),
+        )
+        self._api_key: str = entry.data[CONF_API_KEY]
+
+    async def _async_update_data(self) -> bytes:
+        """Fetch the latest weather map JPEG bytes from the Quic API."""
+        http_session = async_get_clientsession(self.hass)
+        client = QuicClient(api_key=self._api_key, session=http_session)
+        try:
+            return await client.get_weathermap()
+        except QuicAuthError as err:
+            raise ConfigEntryAuthFailed("Invalid or expired Quic API key") from err
+        except QuicError as err:
+            raise UpdateFailed(f"Error fetching weather map: {err}") from err
+
 
 class QuicNZCoordinator(DataUpdateCoordinator[Session]):
     """Fetch session data from the Quic API on a fixed schedule."""
@@ -33,6 +60,7 @@ class QuicNZCoordinator(DataUpdateCoordinator[Session]):
         )
         self._api_key: str = entry.data[CONF_API_KEY]
         self._service_id: str = entry.data[CONF_SERVICE_ID]
+        self.weathermap = QuicNZWeathermapCoordinator(hass, entry)
 
     @property
     def service_id(self) -> str:

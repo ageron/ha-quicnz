@@ -22,8 +22,9 @@ Exposes your Quic broadband session and service details as Home Assistant entiti
 | Local Fibre Company | Sensor | LFC name (e.g. `Chorus`) |
 | Service Status | Sensor | Service account status (e.g. `active`) |
 | Data Cap | Sensor | Monthly data cap in GB (`unavailable` when uncapped) |
+| Network Weather Map | Image | JPEG snapshot of the Quic network weather map |
 
-Data is refreshed every **5 minutes**, matching the Quic API's server-side cache TTL.
+Session data is refreshed every **5 minutes**; the weather map every **6 minutes** — both matching the Quic API's server-side cache TTLs.
 
 ---
 
