@@ -1,0 +1,12 @@
+{
+  "domain": "quicnz",
+  "name": "Quic Broadband",
+  "codeowners": ["@ageron"],
+  "config_flow": true,
+  "documentation": "https://github.com/ageron/ha-quicnz",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "requirements": ["quicnz>=0.1.1"],
+  "homeassistant": "2024.4.0",
+  "version": "0.1.0"
+}
