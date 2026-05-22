@@ -47,6 +47,10 @@ class QuicNZWeathermapImage(ImageEntity):
         self.async_on_remove(
             self._coordinator.async_add_listener(self._handle_coordinator_update)
         )
+        # The weathermap coordinator has no data yet on first setup; fetch now
+        # so the image is available immediately rather than after 6 minutes.
+        if self._coordinator.data is None:
+            await self._coordinator.async_request_refresh()
 
     @callback
     def _handle_coordinator_update(self) -> None:

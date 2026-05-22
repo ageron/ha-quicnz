@@ -70,7 +70,7 @@ Each service you add becomes its own device with all entities listed above.
 The **Network Weather Map** image entity is not shown on the default dashboard automatically. To add it:
 
 1. Go to your dashboard and click the **pencil** (edit) icon.
-2. Click **Add card** and search for **Picture Entity**.
+2. Click **Add card** and search for **Picture**.
 3. Set **Entity** to `image.quic_<service_id>_network_weather_map`.
 4. Save.
 
