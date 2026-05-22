@@ -65,6 +65,25 @@ Each service you add becomes its own device with all entities listed above.
 
 ---
 
+## Displaying the weather map
+
+The **Network Weather Map** image entity is not shown on the default dashboard automatically. To add it:
+
+1. Go to your dashboard and click the **pencil** (edit) icon.
+2. Click **Add card** and search for **Picture Entity**.
+3. Set **Entity** to `image.quic_<service_id>_network_weather_map`.
+4. Save.
+
+If you cannot find the entity, it may be disabled. To enable it:
+
+1. Go to **Settings → Devices & Services → Quic Broadband → your device**.
+2. Find **Network Weather Map** in the entity list (it may appear as *disabled*).
+3. Click it, toggle **Enable**, and confirm.
+
+Then add it to your dashboard as described above.
+
+---
+
 ## Licence
 
 [MIT](LICENSE)

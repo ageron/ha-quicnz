@@ -7,7 +7,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 import homeassistant.util.dt as dt_util
 
 from .const import DOMAIN
@@ -26,9 +25,7 @@ async def async_setup_entry(
     ])
 
 
-class QuicNZWeathermapImage(
-    CoordinatorEntity[QuicNZWeathermapCoordinator], ImageEntity
-):
+class QuicNZWeathermapImage(ImageEntity):
     """Image entity that displays the Quic network weather map."""
 
     _attr_content_type = "image/jpeg"
@@ -38,18 +35,30 @@ class QuicNZWeathermapImage(
     def __init__(
         self, coordinator: QuicNZWeathermapCoordinator, service_id: str
     ) -> None:
-        CoordinatorEntity.__init__(self, coordinator)
+        # ImageEntity.__init__ must be called to set up access_tokens.
+        super().__init__(coordinator.hass)
+        self._coordinator = coordinator
         self._attr_unique_id = f"{service_id}_weathermap"
-        self._attr_image_last_updated = dt_util.utcnow()
-        # Re-use the same device as the sensor/binary-sensor entities.
         self._attr_device_info = DeviceInfo(identifiers={(DOMAIN, service_id)})
 
-    async def async_image(self) -> bytes | None:
-        """Return the latest weather map JPEG bytes."""
-        return self.coordinator.data
+    async def async_added_to_hass(self) -> None:
+        """Subscribe to coordinator updates when the entity is added to HA."""
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self._coordinator.async_add_listener(self._handle_coordinator_update)
+        )
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Bump image_last_updated so HA knows the image has changed."""
         self._attr_image_last_updated = dt_util.utcnow()
-        super()._handle_coordinator_update()
+        self.async_write_ha_state()
+
+    async def async_image(self) -> bytes | None:
+        """Return the latest weather map JPEG bytes."""
+        return self._coordinator.data
+
+    @property
+    def available(self) -> bool:
+        """Return True when the coordinator has successfully fetched data."""
+        return self._coordinator.last_update_success
