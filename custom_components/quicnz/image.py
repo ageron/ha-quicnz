@@ -31,6 +31,7 @@ class QuicNZWeathermapImage(ImageEntity):
     _attr_content_type = "image/jpeg"
     _attr_has_entity_name = True
     _attr_translation_key = "weathermap"
+    _attr_attribution = "Quic network status: https://www.quic.nz/status/"
 
     def __init__(
         self, coordinator: QuicNZWeathermapCoordinator, service_id: str
