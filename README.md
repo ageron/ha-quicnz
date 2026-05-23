@@ -87,3 +87,9 @@ Then add it to your dashboard as described above.
 ## Licence
 
 [MIT](LICENSE)
+
+---
+
+## Trademark notice
+
+The Quic Broadband name and logo are trademarks of Vetta Trading Ltd t/a Quic Broadband. They are used here solely for identification purposes and do not imply any affiliation with or endorsement by Quic Broadband.
